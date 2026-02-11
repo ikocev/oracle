@@ -62,6 +62,33 @@ class OracleControlledSwitch(SwitchEntity):
         return f"{self._entry_id}_{self._client_ip}"
 
     @property
+    def device_info(self):
+        """Return device registry information for this client."""
+        identifiers = {(DOMAIN, f"{self._entry_id}:{self._client_ip}")}
+        connections = set()
+        # try to find MAC from stored data
+        domain = self._hass.data[DOMAIN].get(self._entry_id, {})
+        # coordinator holds clients
+        coord = domain.get("coordinator")
+        mac = None
+        if coord and coord.data:
+            for c in coord.data:
+                ip = c.get("ip") or c.get("client_ip") or c.get("address")
+                if ip == self._client_ip:
+                    mac = c.get("mac") or c.get("hwaddr")
+                    break
+        if mac:
+            connections.add(("mac", mac))
+
+        return {
+            "identifiers": identifiers,
+            "name": self._attr_name,
+            "manufacturer": "AdGuard Home",
+            "model": "Client",
+            "connections": connections,
+        }
+
+    @property
     def is_on(self) -> bool:
         data = self._hass.data[DOMAIN].get(self._entry_id, {}).get("data", {})
         controlled = set(data.get("controlled_devices") or [])

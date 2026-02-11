@@ -69,9 +69,30 @@ class OracleDeviceSensor(SensorEntity):
         self._client = client
         self._attr_extra_state_attributes = {}
 
+        # store base identifier for device registry
+        self._device_ip = self._client.get("ip") or self._client.get("client_ip") or self._client.get("address")
+        self._device_name = name
+
     @property
     def unique_id(self):
-        return (self._client.get("id") or self._client.get("ip") or self._client.get("client_ip"))
+        return f"{self._entry.entry_id}_{(self._client.get('id') or self._device_ip)}"
+
+    @property
+    def device_info(self):
+        """Return device registry information for this client."""
+        identifiers = {(DOMAIN, f"{self._entry.entry_id}:{self._device_ip}")}
+        connections = set()
+        mac = self._client.get("mac") or self._client.get("hwaddr")
+        if mac:
+            connections.add(("mac", mac))
+
+        return {
+            "identifiers": identifiers,
+            "name": self._device_name,
+            "manufacturer": "AdGuard Home",
+            "model": self._client.get("model") or "Client",
+            "connections": connections,
+        }
 
     @property
     def state(self):
