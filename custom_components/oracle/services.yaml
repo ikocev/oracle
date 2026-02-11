@@ -1,0 +1,23 @@
+"""
+Services provided by the Oracle integration.
+
+- mark_controlled: mark a client as controlled
+- unmark_controlled: unmark a client
+"""
+
+mark_controlled:
+  description: "Mark a client (by ip) as controlled by Oracle"
+  fields:
+    client_ip:
+      description: "IP address of the client to control"
+      example: "192.168.1.42"
+
+unmark_controlled:
+  description: "Unmark a client (by ip) so it is no longer controlled"
+  fields:
+    client_ip:
+      description: "IP address of the client to unmark"
+      example: "192.168.1.42"
+
+refresh_now:
+  description: "Trigger an immediate refresh of Oracle data"

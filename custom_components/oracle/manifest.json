@@ -1,0 +1,12 @@
+{
+  "domain": "oracle",
+  "name": "Oracle",
+  "codeowners": ["@ikocev"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/ikocev/oracle",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/ikocev/oracle/issues",
+  "requirements": ["aiohttp"],
+  "version": "0.0.1"
+}
