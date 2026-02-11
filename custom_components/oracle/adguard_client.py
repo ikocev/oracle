@@ -25,7 +25,16 @@ class AdGuardApi:
         """Return list of clients known to AdGuard Home."""
         url = self._url("/control/clients")
         async with self._session.get(url, auth=self._auth, raise_for_status=True) as resp:
-            return await resp.json()
+            data = await resp.json()
+            if isinstance(data, list):
+                return data
+            # v0.107+ returns dict with 'clients' and 'auto_clients'
+            clients = data.get("clients", [])
+            auto_clients = data.get("auto_clients", [])
+            # Merge lists, preferring manual clients if duplicates exist (though usually distinct)
+            # Or just return all unique clients.
+            # Let's just return a combined list for now.
+            return clients + auto_clients
 
     async def async_get_queries(self, client_id: str | None = None) -> list[dict[str, Any]]:
         """Return recent DNS queries. If client_id given, filter by it if API supports it."""
