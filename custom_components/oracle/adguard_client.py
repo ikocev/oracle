@@ -31,10 +31,17 @@ class AdGuardApi:
             # v0.107+ returns dict with 'clients' and 'auto_clients'
             clients = data.get("clients", [])
             auto_clients = data.get("auto_clients", [])
-            # Merge lists, preferring manual clients if duplicates exist (though usually distinct)
-            # Or just return all unique clients.
-            # Let's just return a combined list for now.
-            return clients + auto_clients
+            
+            raw_list = clients + auto_clients
+            final_list = []
+            for item in raw_list:
+                if isinstance(item, dict):
+                    final_list.append(item)
+                elif isinstance(item, str):
+                    # handle if API returns list of IPs/IDs as strings
+                    final_list.append({"ip": item, "name": item, "ids": [item]})
+            
+            return final_list
 
     async def async_get_queries(self, client_id: str | None = None) -> list[dict[str, Any]]:
         """Return recent DNS queries. If client_id given, filter by it if API supports it."""
