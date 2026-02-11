@@ -9,6 +9,7 @@ from typing import Any
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import DOMAIN
 
@@ -18,7 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up sensors for Oracle."""
     domain_data = hass.data[DOMAIN].setdefault(entry.entry_id, {})
-    session = hass.helpers.aiohttp_client.async_get_clientsession()
+    session = async_get_clientsession(hass)
     from .adguard_client import AdGuardApi
 
     client = AdGuardApi(session, entry.data.get(CONF_HOST), entry.data.get("username"), entry.data.get("password"))
