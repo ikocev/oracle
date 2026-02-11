@@ -1,9 +1,7 @@
-"""
-Services provided by the Oracle integration.
-
-- mark_controlled: mark a client as controlled
-- unmark_controlled: unmark a client
-"""
+# Services provided by the Oracle integration.
+#
+# - mark_controlled: mark a client as controlled
+# - unmark_controlled: unmark a client
 
 mark_controlled:
   description: "Mark a client (by ip) as controlled by Oracle"

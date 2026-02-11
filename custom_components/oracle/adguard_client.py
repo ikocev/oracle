@@ -12,7 +12,10 @@ class AdGuardApi:
 
     def __init__(self, session: aiohttp.ClientSession, host: str, username: str = "", password: str = ""):
         self._session = session
-        self._host = host.rstrip("/")
+        host = host.rstrip("/")
+        if not host.startswith(("http://", "https://")):
+            host = f"http://{host}"
+        self._host = host
         self._auth = aiohttp.BasicAuth(username, password) if username or password else None
 
     def _url(self, path: str) -> str:
