@@ -64,14 +64,14 @@ class OracleControlledSwitch(SwitchEntity):
     @property
     def is_on(self) -> bool:
         data = self._hass.data[DOMAIN].get(self._entry_id, {}).get("data", {})
-        controlled = set(data.get("controlled_devices", []))
+        controlled = set(data.get("controlled_devices") or [])
         return self._client_ip in controlled
 
     async def async_turn_on(self, **kwargs):
         domain = self._hass.data[DOMAIN].get(self._entry_id, {})
         store = domain.get("store")
         data = domain.setdefault("data", {})
-        controlled = set(data.get("controlled_devices", []))
+        controlled = set(data.get("controlled_devices") or [])
         controlled.add(self._client_ip)
         data["controlled_devices"] = list(controlled)
         if store:
@@ -82,7 +82,7 @@ class OracleControlledSwitch(SwitchEntity):
         domain = self._hass.data[DOMAIN].get(self._entry_id, {})
         store = domain.get("store")
         data = domain.setdefault("data", {})
-        controlled = set(data.get("controlled_devices", []))
+        controlled = set(data.get("controlled_devices") or [])
         controlled.discard(self._client_ip)
         data["controlled_devices"] = list(controlled)
         if store:

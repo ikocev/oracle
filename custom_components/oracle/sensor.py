@@ -76,7 +76,7 @@ class OracleDeviceSensor(SensorEntity):
     @property
     def state(self):
         # Return today's query count
-        queries = self._client.get("queries", [])
+        queries = self._client.get("queries") or []
         today = date.today().isoformat()
         # Try to filter queries that have timestamp today if possible
         count = 0

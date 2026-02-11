@@ -29,8 +29,8 @@ class AdGuardApi:
             if isinstance(data, list):
                 return data
             # v0.107+ returns dict with 'clients' and 'auto_clients'
-            clients = data.get("clients", [])
-            auto_clients = data.get("auto_clients", [])
+            clients = data.get("clients") or []
+            auto_clients = data.get("auto_clients") or []
             
             raw_list = clients + auto_clients
             final_list = []
