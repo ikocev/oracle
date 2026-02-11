@@ -42,13 +42,13 @@ class OracleOptionsFlowHandler(config_entries.OptionsFlow):
     """Options flow for Oracle."""
 
     def __init__(self, config_entry):
-        self.config_entry = config_entry
+        self._config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
-        current = dict(self.config_entry.options)
+        current = dict(self._config_entry.options)
         data_schema = vol.Schema(
             {
                 vol.Required("scan_interval", default=current.get("scan_interval", 60)): int,
